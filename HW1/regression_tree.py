@@ -3,12 +3,23 @@ import csv
 def inputDataset(file_path):
 	f = open(file_path, 'rb')
 	data = list(csv.reader(f))
-	record_count = len(data)-1
-	attribute_count = len(data[0])
-	data[0].append('RID')
-	for i in xrange(1,record_count+1):
-		data[i].append(i-1)
+	del data[0]
+	record_count = len(data)
+	attribute_count = len(data[0])-1
+	for i in xrange(record_count):
+		data[i].append(i)
 	return data
+
+def createAttrLists(data):
+	record_count = len(data)
+	attribute_count = len(data[0])-2
+	attr_list = [[[0 for x in range(3)] for y in range(record_count)] for z in range(attribute_count)]
+	for attr in range(attribute_count):
+		for record in xrange(record_count):
+			attr_list[attr][record][0] = float(data[record][attr])
+			attr_list[attr][record][1] = float(data[record][attribute_count])
+			attr_list[attr][record][2] = int(data[record][attribute_count+1])
+	return attr_list
 
 def GrowTree(D):
 	Partition(D)
@@ -25,7 +36,5 @@ def GrowTree(D):
 if __name__ == '__main__':
 	
 	dataset = inputDataset('train.csv')
-
-	
-
-
+	attr_list = createAttrLists(dataset)
+	print attr_list[0][0]
